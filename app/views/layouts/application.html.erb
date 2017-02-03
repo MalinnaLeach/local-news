@@ -8,6 +8,15 @@
 </head>
 <body>
 
+  <%if !current_user %>
+    <%= link_to("Log In", new_user_session_path, controller: 'users/sessions', action: 'new') %>
+    <%= link_to("Sign Up", new_user_registration_path, controller: 'devise/registrations', action: 'new') %>
+  <% else %>
+    <p><%= current_user.username %></p>
+    <%= link_to("Edit Profile", edit_user_registration_path, controller: 'devise/registrations', action: 'edit') %>
+    <%= link_to("Log Out", destroy_user_session_path, controller: 'users/sessions', method: 'delete') %>
+  <% end %>
+
 <%= yield %>
 
 </body>
