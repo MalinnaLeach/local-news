@@ -1,3 +1,11 @@
 
-No stories yet
+<% if @stories %>
+  <% @stories.each do |story| %>
+    <h2> <%= story.headline %> </h2>
+    <p> <%= story.details %> </p>
+  <% end %>
+<% else %>
+  No stories yet
+<% end %>
+
 <a href='#'>Add a story</a>

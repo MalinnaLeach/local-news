@@ -4,10 +4,10 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  # has_many :stories, dependent: :destroy
+  has_many :stories, dependent: :destroy
   # has_many :comments, dependent: :destroy
   # has_many :likes, dependent: :destroy
-  # belongs_to :area
+  belongs_to :area
 
   attr_accessor :login
 
