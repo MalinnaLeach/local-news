@@ -16,12 +16,8 @@ feature 'stories' do
   end
 
   context 'where stories have been added' do
-
     scenario 'should display a story' do
-      visit '/users/sign_in'
-      fill_in "user[login]", with: 'bob'
-      fill_in "user[password]", with: '12345678'
-      click_button 'Log in'
+      login_as_bob
       Story.create(headline: 'Tube strike', details: 'Large queues at the station', area: Area.where(:name => 'Leyton').first)
       visit '/stories'
       expect(page).to have_content 'Tube strike'
@@ -30,17 +26,9 @@ feature 'stories' do
   end
 
   context 'creating stories' do
-
     scenario 'prompts user to fill out a form, then displays the new restaurant' do
-      visit '/users/sign_in'
-      fill_in "user[login]", with: 'bob'
-      fill_in "user[password]", with: '12345678'
-      click_button 'Log in'
-      visit '/stories'
-      click_link 'Add a story'
-      fill_in 'Headline', with: 'Tube strike'
-      fill_in 'Details', with: 'Large queues at the station'
-      click_button 'Publish'
+      login_as_bob
+      input_a_story
       expect(page).to have_content 'Tube strike'
       expect(current_path).to eq '/stories'
     end
@@ -51,13 +39,22 @@ feature 'stories' do
     let!(:tube){ Story.create(headline: 'Tube strike', details: 'Large queues at the station', area: Area.where(:name => 'Leyton').first) }
 
     scenario 'lets a user view a restaurant' do
-      visit '/users/sign_in'
-      fill_in "user[login]", with: 'bob'
-      fill_in "user[password]", with: '12345678'
-      click_button 'Log in'
+      login_as_bob
       visit '/stories'
       click_link 'Tube strike'
       expect(page).to have_content 'Tube strike'
+      expect(current_path).to eq "/stories/#{tube.id}"
+    end
+  end
+
+  context 'editing a story' do
+
+    let!(:tube){ Story.create(headline: 'Tube strike', details: 'Large queues at the station', area: Area.where(:name => 'Leyton').first) }
+
+    scenario 'lets a user edit their story' do
+      login_as_bob
+      edit_tube_story
+      expect(page).to have_content "Leyton station closed"
       expect(current_path).to eq "/stories/#{tube.id}"
     end
   end

@@ -22,6 +22,16 @@ class StoriesController < ApplicationController
   @story = Story.find(params[:id])
   end
 
+  def edit
+    @story = Story.find(params[:id])
+  end
+
+  def update
+    @story = Story.find(params[:id])
+    @story.update(story_params)
+    redirect_to story_path(@story)
+  end
+
   private
 
   def story_params
