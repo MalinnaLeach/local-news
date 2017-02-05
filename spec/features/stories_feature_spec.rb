@@ -26,7 +26,7 @@ feature 'stories' do
   end
 
   context 'creating stories' do
-    scenario 'prompts user to fill out a form, then displays the new restaurant' do
+    scenario 'prompts user to fill out a form, then displays the new story' do
       login_as_bob
       input_a_story
       expect(page).to have_content 'Tube strike'
@@ -38,7 +38,7 @@ feature 'stories' do
 
     let!(:tube){ Story.create(headline: 'Tube strike', details: 'Large queues at the station', area: Area.where(:name => 'Leyton').first) }
 
-    scenario 'lets a user view a restaurant' do
+    scenario 'lets a user view a story' do
       login_as_bob
       visit '/stories'
       click_link 'Tube strike'
@@ -56,6 +56,20 @@ feature 'stories' do
       edit_tube_story
       expect(page).to have_content "Leyton station closed"
       expect(current_path).to eq "/stories/#{tube.id}"
+    end
+  end
+
+  context 'deleting a story' do
+
+    let!(:tube){ Story.create(headline: 'Tube strike', details: 'Large queues at the station', area: Area.where(:name => 'Leyton').first) }
+
+    scenario 'lets a user delete their story' do
+      login_as_bob
+      visit '/stories'
+      click_link 'Tube strike'
+      click_link 'Delete Story'
+      expect(page).not_to have_content "Tube strike"
+      expect(current_path).to eq '/stories'
     end
   end
 

@@ -1,3 +1,4 @@
 <p><%= @story.headline %></p>
 <p><%= @story.details %></p>
 <%= link_to "Edit Story", edit_story_path(@story) %>
+<%= link_to "Delete Story", story_path(@story), method: :delete %>
