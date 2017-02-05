@@ -18,6 +18,10 @@ class StoriesController < ApplicationController
     redirect_to '/stories'
   end
 
+  def show
+  @story = Story.find(params[:id])
+  end
+
   private
 
   def story_params

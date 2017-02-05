@@ -2,6 +2,11 @@ require 'rails_helper'
 
 feature 'stories' do
 
+  before do
+    leyton = Area.create(name: 'Leyton')
+    user = User.create(username: 'bob', email: 'bob@gmail.com', area: leyton, password: '12345678', password_confirmation: '12345678')
+  end
+
   context 'where no stories have been added' do
     scenario 'should display a prompt to add a story' do
       visit '/stories'
@@ -11,10 +16,6 @@ feature 'stories' do
   end
 
   context 'where stories have been added' do
-    before do
-      leyton = Area.create(name: 'Leyton')
-      user = User.create(username: 'bob', email: 'bob@gmail.com', area: leyton, password: '12345678', password_confirmation: '12345678')
-    end
 
     scenario 'should display a story' do
       visit '/users/sign_in'
@@ -29,10 +30,7 @@ feature 'stories' do
   end
 
   context 'creating stories' do
-    before do
-      leyton = Area.create(name: 'Leyton')
-      user = User.create(username: 'bob', email: 'bob@gmail.com', area: leyton, password: '12345678', password_confirmation: '12345678')
-    end
+
     scenario 'prompts user to fill out a form, then displays the new restaurant' do
       visit '/users/sign_in'
       fill_in "user[login]", with: 'bob'
@@ -45,6 +43,22 @@ feature 'stories' do
       click_button 'Publish'
       expect(page).to have_content 'Tube strike'
       expect(current_path).to eq '/stories'
+    end
+  end
+
+  context 'viewing full stories' do
+
+    let!(:tube){ Story.create(headline: 'Tube strike', details: 'Large queues at the station', area: Area.where(:name => 'Leyton').first) }
+
+    scenario 'lets a user view a restaurant' do
+      visit '/users/sign_in'
+      fill_in "user[login]", with: 'bob'
+      fill_in "user[password]", with: '12345678'
+      click_button 'Log in'
+      visit '/stories'
+      click_link 'Tube strike'
+      expect(page).to have_content 'Tube strike'
+      expect(current_path).to eq "/stories/#{tube.id}"
     end
   end
 

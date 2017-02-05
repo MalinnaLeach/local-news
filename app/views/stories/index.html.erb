@@ -1,7 +1,7 @@
 
 <% if @stories %>
   <% @stories.each do |story| %>
-    <h2> <%= story.headline %> </h2>
+    <h2> <%= link_to story.headline, story_path(story) %> </h2>
     <p> <%= story.details %> </p>
   <% end %>
 <% else %>
